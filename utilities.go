@@ -10,7 +10,7 @@ import (
 var nullFile *os.File
 
 func CheckFatal(e error) {
-	if e != nil && e != io.EOF {
+	if e != nil && e != io.EOF && e != io.ErrUnexpectedEOF {
 		log.Fatal(e)
 	}
 }
