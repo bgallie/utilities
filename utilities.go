@@ -7,11 +7,20 @@ import (
 	"os"
 )
 
-var nullFile *os.File
+var (
+	nullFile  *os.File
+	loggingOn = false
+)
 
 func CheckFatal(e error) {
 	if e != nil && e != io.EOF && e != io.ErrUnexpectedEOF {
-		log.Fatal(e)
+		if loggingOn {
+			log.Fatal(e)
+		} else {
+			TurnOnLogging()
+			log.Fatal(e)
+			TurnOffLogging()
+		}
 	}
 }
 
@@ -41,8 +50,14 @@ func TurnOffLogging() {
 	}
 
 	log.SetOutput(nullFile)
+	loggingOn = false
 }
 
 func TurnOnLogging() {
 	log.SetOutput(os.Stderr)
+	loggingOn = true
+}
+
+func IsLoggingOn() bool {
+	return loggingOn
 }
