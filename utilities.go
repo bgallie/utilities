@@ -8,8 +8,10 @@ import (
 )
 
 var (
-	nullFile  *os.File
-	loggingOn = false
+	nullFile    *os.File
+	logFile     = os.Stderr
+	loggingOn   = false
+	logFileName string
 )
 
 func CheckFatal(e error) {
@@ -41,6 +43,18 @@ func Un(s string) {
 	log.Printf("leaving: %s", s)
 }
 
+func SetLogFileName(fileName string) {
+	var err error
+	logFileName = fileName
+	if len(logFileName) != 0 {
+		logFile, err = os.OpenFile(logFileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+		if err != nil {
+			log.SetOutput(os.Stderr)
+			log.Fatal(err)
+		}
+	}
+}
+
 func TurnOffLogging() {
 	var err error
 
@@ -54,7 +68,9 @@ func TurnOffLogging() {
 }
 
 func TurnOnLogging() {
-	log.SetOutput(os.Stderr)
+	// Set the output to os.Stderr so that if opening the log file fails, the
+	// error will be sent to Stderr.
+	log.SetOutput(logFile)
 	loggingOn = true
 }
 
