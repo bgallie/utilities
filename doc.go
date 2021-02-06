@@ -1,6 +1,2 @@
-// utilities project doc.go
-
-/*
-utilities document
-*/
+// Package utilities document
 package utilities
