@@ -1,3 +1,3 @@
-module utilities
+module github.com/bgallie/utilities
 
-go 1.13
+go 1.15

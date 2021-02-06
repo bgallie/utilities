@@ -1,4 +1,4 @@
-// utilities project utilities.go
+// Package utilities common utilities used by my projects.
 package utilities
 
 import (
@@ -14,6 +14,7 @@ var (
 	logFileName string
 )
 
+// CheckFatal checks for error that are not io.EOF and io.ErrUnexpectedEOF and logs them.
 func CheckFatal(e error) {
 	if e != nil && e != io.EOF && e != io.ErrUnexpectedEOF {
 		if loggingOn {
@@ -26,6 +27,7 @@ func CheckFatal(e error) {
 	}
 }
 
+// DeferClose with log the given string and then execute the given Close funtion
 func DeferClose(s string, rw func() error) {
 	if len(s) != 0 {
 		log.Println(s)
@@ -34,15 +36,20 @@ func DeferClose(s string, rw func() error) {
 	CheckFatal(err)
 }
 
+// Trace will log the given string.
+// It is used with Un() to log entering and leaving a function by adding
+// 'defer Un(Trace("<function name>"))' at the begining of  the function.
 func Trace(s string) string {
 	log.Printf("entering: %s", s)
 	return s
 }
 
+// Un will log the given string
 func Un(s string) {
 	log.Printf("leaving: %s", s)
 }
 
+// SetLogFileName will arrange the named file to be used for the log ouput.
 func SetLogFileName(fileName string) {
 	var err error
 	logFileName = fileName
@@ -55,6 +62,7 @@ func SetLogFileName(fileName string) {
 	}
 }
 
+// TurnOffLogging sets the logging output to os.DevNull
 func TurnOffLogging() {
 	var err error
 
@@ -67,13 +75,13 @@ func TurnOffLogging() {
 	loggingOn = false
 }
 
+// TurnOnLogging sets the logging output to the currently assigned logFile.
 func TurnOnLogging() {
-	// Set the output to os.Stderr so that if opening the log file fails, the
-	// error will be sent to Stderr.
 	log.SetOutput(logFile)
 	loggingOn = true
 }
 
+// IsLoggingOn will return true if logging is currently enabled.
 func IsLoggingOn() bool {
 	return loggingOn
 }
