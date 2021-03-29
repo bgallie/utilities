@@ -66,19 +66,23 @@ func SetLogFileName(fileName string) {
 func TurnOffLogging() {
 	var err error
 
-	if nullFile == nil {
-		nullFile, err = os.Open(os.DevNull)
-		CheckFatal(err)
-	}
+	if loggingOn {
+		if nullFile == nil {
+			nullFile, err = os.Open(os.DevNull)
+			CheckFatal(err)
+		}
 
-	log.SetOutput(nullFile)
-	loggingOn = false
+		log.SetOutput(nullFile)
+		loggingOn = false
+	}
 }
 
 // TurnOnLogging sets the logging output to the currently assigned logFile.
 func TurnOnLogging() {
-	log.SetOutput(logFile)
-	loggingOn = true
+	if !loggingOn {
+		log.SetOutput(logFile)
+		loggingOn = true
+	}
 }
 
 // IsLoggingOn will return true if logging is currently enabled.
